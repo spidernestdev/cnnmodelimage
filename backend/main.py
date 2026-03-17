@@ -10,14 +10,14 @@ app = FastAPI()
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000"],
+    allow_origins=["*"],  # allow all for deployment
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
-model_path = os.path.join(BASE_DIR, "models", "security_model.h5")
+model_path = os.path.join(BASE_DIR, "models", "security_model.keras")  # ✅ updated
 
 model = tf.keras.models.load_model(model_path)
 
