@@ -17,7 +17,7 @@ app.add_middleware(
 )
 
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
-model_path = os.path.join(BASE_DIR, "models", "security_model.keras")  # ✅ updated
+model_path = os.path.join(BASE_DIR, "models", "clean_model.keras")  # ✅ updated
 
 model = tf.keras.models.load_model(model_path, compile=False)
 
