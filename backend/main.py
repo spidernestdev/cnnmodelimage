@@ -10,16 +10,39 @@ app = FastAPI()
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # allow all for deployment
+    allow_origins=["*"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
+# BASE PATH
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
-model_path = os.path.join(BASE_DIR, "models", "clean_model.keras")  # ✅ updated
+weights_path = os.path.join(BASE_DIR, "models", "model.weights.h5")
 
-model = tf.keras.models.load_model(model_path, compile=False)
+# 🔥 BUILD MODEL (same architecture as training)
+model = tf.keras.Sequential([
+    tf.keras.layers.Input(shape=(32,32,3)),
+
+    tf.keras.layers.Conv2D(32, (3,3), activation='relu', padding='same'),
+    tf.keras.layers.MaxPooling2D(),
+
+    tf.keras.layers.Conv2D(64, (3,3), activation='relu', padding='same'),
+    tf.keras.layers.MaxPooling2D(),
+
+    tf.keras.layers.Conv2D(128, (3,3), activation='relu', padding='same'),
+    tf.keras.layers.MaxPooling2D(),
+
+    tf.keras.layers.Flatten(),
+
+    tf.keras.layers.Dense(128, activation='relu'),
+    tf.keras.layers.Dropout(0.3),
+
+    tf.keras.layers.Dense(2, activation='softmax')
+])
+
+# ✅ LOAD ONLY WEIGHTS (no version issue)
+model.load_weights(weights_path)
 
 @app.get("/")
 def home():
